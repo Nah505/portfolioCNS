@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đào Nhật Anh — Portfolio Kỹ thuật số</title>
+<meta name="description" content="Portfolio Kỹ thuật số của Đào Nhật Anh — K70I-CS6, Trường Đại học Công nghệ, ĐHQGHN. Tổng hợp các bài tập môn Nhập môn Công nghệ số và Ứng dụng Trí tuệ nhân tạo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080a10; --bg2:#0c0f17; --surface:#11141e; --surface2:#161a26;
+  --ink:#eceef5; --soft:#b6bccd; --muted:#7b8197; --faint:#565d72;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+  --teal:#5eead4; --teal-d:#2dd4bf;
+  --amber:#fbbf24; --violet:#a78bfa; --green:#86efac; --pink:#f0abfc; --coral:#fb7185; --sky:#7dd3fc;
+  --maxw:1180px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:78px}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Be Vietnam Pro",system-ui,sans-serif;
+  font-size:17px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* ---- atmospheric background ---- */
+.bg-fx{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+.bg-fx::before{content:"";position:absolute;inset:-20%;
+  background:
+    radial-gradient(45% 40% at 78% 8%, rgba(94,234,212,.16), transparent 60%),
+    radial-gradient(40% 36% at 12% 30%, rgba(167,139,250,.14), transparent 60%),
+    radial-gradient(50% 45% at 60% 95%, rgba(251,191,36,.10), transparent 60%);
+  filter:blur(20px);}
+.grid-tex{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(circle at 50% 30%,#000,transparent 78%);
+          mask-image:radial-gradient(circle at 50% 30%,#000,transparent 78%);
+  opacity:.5;}
+.noise{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ---- nav ---- */
+header.nav{position:fixed;top:0;left:0;right:0;z-index:50;
+  backdrop-filter:blur(14px);background:rgba(8,10,16,.72);
+  border-bottom:1px solid transparent;transition:border-color .3s,background .3s;}
+header.nav.scrolled{border-color:var(--line);background:rgba(8,10,16,.85)}
+.nav-in{max-width:var(--maxw);margin:0 auto;padding:14px 26px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:11px;font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:13px;letter-spacing:.02em;color:var(--soft)}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 14px var(--teal);animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45;transform:scale(.82)}}
+.brand b{color:var(--ink);font-family:"Be Vietnam Pro";font-weight:700;font-size:15px;letter-spacing:0}
+.navlinks{display:flex;gap:6px;align-items:center}
+.navlinks a{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:12.5px;color:var(--muted);text-decoration:none;padding:8px 14px;border-radius:9px;transition:.2s;position:relative}
+.navlinks a:hover{color:var(--ink)}
+.navlinks a.active{color:var(--bg);background:var(--teal)}
+.menu-btn{display:none;background:none;border:1px solid var(--line2);color:var(--ink);border-radius:9px;padding:8px 12px;font-size:18px;cursor:pointer}
+
+/* ---- layout ---- */
+section{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+.seclabel{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-d);display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.seclabel::before{content:"";width:30px;height:1px;background:var(--teal-d);opacity:.6}
+h2.sec{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:700;font-size:clamp(2rem,5vw,3.1rem);line-height:1.05;letter-spacing:-.02em;margin-bottom:14px}
+.sec-sub{color:var(--soft);max-width:60ch;margin-bottom:48px}
+
+/* ---- hero ---- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:120px;padding-bottom:60px;position:relative}
+.hero .kicker{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:13px;color:var(--teal-d);letter-spacing:.04em;margin-bottom:24px;opacity:0;animation:rise .8s .1s forwards}
+.hero h1{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:800;font-size:clamp(3.2rem,11vw,8rem);line-height:.92;letter-spacing:-.035em;margin-bottom:10px}
+.hero h1 .l1{display:block;opacity:0;animation:rise .9s .2s forwards}
+.hero h1 .l2{display:block;background:linear-gradient(100deg,var(--teal) 0%,var(--sky) 45%,var(--violet) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;opacity:0;animation:rise .9s .34s forwards}
+.hero .tag{font-size:clamp(1.05rem,2.4vw,1.45rem);color:var(--soft);max-width:54ch;margin-top:26px;opacity:0;animation:rise .9s .5s forwards}
+.hero .tag em{color:var(--ink);font-style:normal;font-weight:600}
+.id-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:38px;opacity:0;animation:rise .9s .64s forwards}
+.id-chip{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:12.5px;color:var(--soft);border:1px solid var(--line2);border-radius:999px;padding:8px 16px;background:rgba(255,255,255,.02);display:flex;gap:8px;align-items:center}
+.id-chip span{color:var(--faint)}
+.id-chip b{color:var(--teal);font-weight:600}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:44px;opacity:0;animation:rise .9s .78s forwards}
+.btn{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:13px;text-decoration:none;padding:13px 22px;border-radius:11px;transition:.22s;display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:1px solid transparent}
+.btn.primary{background:var(--teal);color:#06251f;font-weight:600}
+.btn.primary:hover{background:var(--sky);transform:translateY(-2px)}
+.btn.ghost{border-color:var(--line2);color:var(--soft)}
+.btn.ghost:hover{border-color:var(--teal);color:var(--ink)}
+.scroll-hint{position:absolute;bottom:30px;left:26px;font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:11px;color:var(--faint);letter-spacing:.1em;display:flex;align-items:center;gap:10px;opacity:0;animation:rise 1s 1s forwards}
+.scroll-hint .bar{width:1px;height:32px;background:linear-gradient(var(--teal-d),transparent);animation:drop 1.8s ease-in-out infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+
+/* ---- about block ---- */
+.about{padding-top:120px;padding-bottom:40px}
+.about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;margin-top:14px}
+.card{background:linear-gradient(180deg,var(--surface),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:32px}
+.card h3{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:700;font-size:1.4rem;margin-bottom:16px;display:flex;align-items:center;gap:11px}
+.card h3 .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:rgba(94,234,212,.12);color:var(--teal);font-size:17px;flex-shrink:0}
+.card p{color:var(--soft);margin-bottom:14px}
+.card p:last-child{margin-bottom:0}
+.goal-list{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.goal-list li{display:flex;gap:14px;color:var(--soft);font-size:15.5px}
+.goal-list li .n{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:12px;color:var(--teal-d);border:1px solid var(--line2);border-radius:7px;width:26px;height:26px;display:grid;place-items:center;flex-shrink:0;margin-top:2px}
+.goal-list li b{color:var(--ink);font-weight:600}
+.skill-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.skill-tags span{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:11.5px;color:var(--soft);border:1px solid var(--line);border-radius:7px;padding:5px 11px;background:rgba(255,255,255,.02)}
+
+/* ---- projects ---- */
+.projects{padding-top:120px;padding-bottom:40px}
+.featured{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:
+   radial-gradient(120% 120% at 100% 0%,rgba(94,234,212,.10),transparent 55%),
+   linear-gradient(180deg,var(--surface),var(--bg2));
+   margin-bottom:54px;position:relative}
+.featured .feat-tag{position:absolute;top:22px;right:22px;font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--bg);background:var(--teal);padding:6px 12px;border-radius:999px;font-weight:600}
+.feat-in{display:grid;grid-template-columns:1fr;gap:0;padding:38px}
+.feat-in .chap{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:12px;letter-spacing:.1em;color:var(--teal-d);margin-bottom:14px;text-transform:uppercase}
+.feat-in h3{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:700;font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.1;letter-spacing:-.02em;margin-bottom:18px;max-width:24ch}
+.feat-in .lead{color:var(--soft);max-width:70ch;margin-bottom:26px}
+.feat-stats{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:28px}
+.stat{border:1px solid var(--line);border-radius:13px;padding:16px 20px;background:rgba(255,255,255,.02);min-width:120px}
+.stat .v{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:700;font-size:1.7rem;color:var(--teal);line-height:1}
+.stat .k{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:11px;color:var(--muted);margin-top:7px;letter-spacing:.03em}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin-bottom:8px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal-d);background:rgba(255,255,255,.02);position:sticky;top:0}
+td{color:var(--soft)}
+td b{color:var(--ink);font-weight:600}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(94,234,212,.03)}
+
+/* project cards */
+.proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.proj{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--surface),var(--bg2));overflow:hidden;display:flex;flex-direction:column;transition:.28s;position:relative}
+.proj:hover{transform:translateY(-4px);border-color:var(--line2)}
+.proj .accent{height:3px;width:100%;background:var(--acc,var(--teal))}
+.proj-body{padding:26px;display:flex;flex-direction:column;flex:1}
+.proj .topline{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.proj .num{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:800;font-size:2.4rem;line-height:1;color:var(--acc,var(--teal));opacity:.85}
+.proj .chap{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;max-width:14ch}
+.proj h4{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:700;font-size:1.28rem;line-height:1.18;letter-spacing:-.01em;margin-bottom:12px}
+.proj .obj{font-size:14.5px;color:var(--soft);margin-bottom:16px}
+.proj .obj b{color:var(--ink)}
+.proj .shot{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:16px;background:#000}
+.proj .shot img{width:100%;display:block}
+.proj .caption{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:10.5px;color:var(--faint);margin:-8px 0 16px;letter-spacing:.02em}
+.kv{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+.kv li{display:block;position:relative;padding-left:21px;font-size:14px;color:var(--soft)}
+.kv li::before{content:"▹";color:var(--acc,var(--teal));position:absolute;left:0;top:0}
+.kv li b{color:var(--ink);font-weight:600}
+.proj .foot{margin-top:auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-top:6px}
+.tagpill{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:10.5px;color:var(--soft);border:1px solid var(--line);border-radius:7px;padding:4px 9px}
+.report-link{margin-left:auto;font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:12px;color:var(--acc,var(--teal));text-decoration:none;display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line2);padding:7px 13px;border-radius:9px;transition:.2s}
+.report-link:hover{background:var(--acc,var(--teal));color:var(--bg);border-color:transparent}
+
+/* ---- summary ---- */
+.summary{padding-top:120px;padding-bottom:40px}
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:34px}
+.sum-card{border:1px solid var(--line);border-radius:16px;padding:26px;background:linear-gradient(180deg,var(--surface),var(--bg2))}
+.sum-card .ic{font-size:22px;margin-bottom:14px}
+.sum-card h4{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:700;font-size:1.18rem;margin-bottom:11px}
+.sum-card p{color:var(--soft);font-size:14.5px}
+.reflect{border:1px solid var(--line);border-radius:18px;padding:38px;background:
+   radial-gradient(110% 110% at 0% 0%,rgba(167,139,250,.09),transparent 55%),
+   linear-gradient(180deg,var(--surface),var(--bg2))}
+.reflect h3{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:700;font-size:1.5rem;margin-bottom:20px}
+.reflect p{color:var(--soft);margin-bottom:16px;max-width:80ch}
+.reflect p:last-child{margin-bottom:0}
+.reflect p strong{color:var(--ink);font-weight:600}
+.takeaways{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:26px}
+.takeaways .ta{border:1px solid var(--line);border-radius:13px;padding:20px;background:rgba(255,255,255,.02)}
+.takeaways .ta .q{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:11px;color:var(--violet);letter-spacing:.06em;margin-bottom:9px;text-transform:uppercase}
+.takeaways .ta p{font-size:14.5px;margin:0}
+
+/* ---- footer ---- */
+footer{margin-top:120px;border-top:1px solid var(--line);background:var(--bg2)}
+.foot-in{max-width:var(--maxw);margin:0 auto;padding:54px 26px 40px;display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
+.foot-in h3{font-family:"Bricolage Grotesque","Be Vietnam Pro";font-weight:700;font-size:1.6rem;margin-bottom:14px}
+.foot-in p{color:var(--soft);max-width:46ch}
+.submit-box{border:1px solid var(--line2);border-radius:14px;padding:24px;background:rgba(94,234,212,.04)}
+.submit-box .lbl{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-d);margin-bottom:14px}
+.submit-box ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.submit-box li{font-size:14px;color:var(--soft);display:flex;gap:10px;align-items:flex-start}
+.submit-box li code{font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:12.5px;color:var(--teal);background:rgba(94,234,212,.08);padding:1px 7px;border-radius:5px}
+.foot-bottom{max-width:var(--maxw);margin:0 auto;padding:22px 26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:"JetBrains Mono","Be Vietnam Pro",sans-serif;font-size:11.5px;color:var(--faint)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* responsive */
+@media(max-width:880px){
+  .about-grid,.proj-grid,.sum-grid,.takeaways,.foot-in{grid-template-columns:1fr}
+  .navlinks{display:none}
+  .navlinks.open{display:flex;position:absolute;top:62px;left:14px;right:14px;flex-direction:column;background:var(--surface);border:1px solid var(--line2);border-radius:14px;padding:10px}
+  .navlinks.open a{padding:12px 14px}
+  .menu-btn{display:block}
+  body{font-size:16px}
+  .feat-in,.reflect,.card{padding:24px}
+}
+@media print{
+  .bg-fx,.grid-tex,.noise,.scroll-hint,header.nav,.hero-cta{display:none}
+  body{background:#fff;color:#111}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+<div class="grid-tex"></div>
+<div class="noise"></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand"><span class="dot"></span><b>Đào Nhật Anh</b><span style="color:var(--faint)">/ portfolio</span></div>
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <nav class="navlinks" id="navlinks">
+      <a href="#gioithieu" data-sec="gioithieu">01 · Giới thiệu</a>
+      <a href="#duan" data-sec="duan">02 · Dự án</a>
+      <a href="#tongket" data-sec="tongket">03 · Tổng kết</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="kicker">// Digital Portfolio — Nhập môn Công nghệ số &amp; Ứng dụng AI</div>
+  <h1><span class="l1">Đào</span><span class="l2">Nhật Anh</span></h1>
+  <p class="tag">Sinh viên ngành <em>Khoa học Máy tính</em> tại Trường Đại học Công nghệ — ĐHQGHN. Portfolio này tổng hợp hành trình học tập qua sáu chương của môn học, từ thao tác nền tảng với máy tính đến việc <em>sử dụng AI một cách có trách nhiệm</em> trong học tập và nghiên cứu.</p>
+  <div class="id-row">
+    <div class="id-chip"><span>NAME</span><b>Đào Nhật Anh</b></div>
+    <div class="id-chip"><span>LỚP</span><b>K70I-CS6</b></div>
+    <div class="id-chip"><span>MSSV</span><b>25021613</b></div>
+    <div class="id-chip"><span>TRƯỜNG</span><b>UET — VNU</b></div>
+  </div>
+  <div class="hero-cta">
+    <a href="#duan" class="btn primary">Xem các dự án →</a>
+    <a href="#gioithieu" class="btn ghost">Về tôi</a>
+  </div>
+  <div class="scroll-hint"><span class="bar"></span>CUỘN ĐỂ KHÁM PHÁ</div>
+</section>
+
+<!-- 01 GIỚI THIỆU -->
+<section class="about" id="gioithieu">
+  <div class="reveal seclabel">Trang 01 — Giới thiệu</div>
+  <h2 class="sec reveal">Về tôi &amp; mục tiêu</h2>
+  <p class="sec-sub reveal">Một chút về bản thân, định hướng học tập và lý do tôi xây dựng cuốn portfolio này.</p>
+
+  <div class="about-grid">
+    <div class="card reveal">
+      <h3><span class="ic">◆</span>Xin chào</h3>
+      <p>Tôi là <b style="color:var(--ink)">Đào Nhật Anh</b>, sinh viên K70I-CS6 ngành Khoa học Máy tính, Trường Đại học Công nghệ — Đại học Quốc gia Hà Nội (UET — VNU). Tôi thích lập trình, tìm hiểu về Trí tuệ nhân tạo và đọc các tài liệu khoa học để hiểu cách công nghệ đang định hình tương lai.</p>
+      <p>Điều khiến tôi hứng thú nhất là điểm giao thoa giữa <b style="color:var(--ink)">Khoa học máy tính và các lĩnh vực đời sống</b> — như cách học sâu (deep learning) được dùng để hỗ trợ chẩn đoán y khoa, hay cách AI thay đổi quy trình làm việc của con người. Tôi tin rằng kỹ năng công nghệ số và tư duy phản biện là nền tảng cho mọi ngành nghề trong thời đại AI.</p>
+      <div class="skill-tags">
+        <span>Khoa học máy tính</span><span>Deep Learning</span><span>Computer Vision</span><span>Prompt Engineering</span><span>Nghiên cứu khoa học</span><span>Làm việc nhóm</span><span>Liêm chính học thuật</span>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <h3><span class="ic">↗</span>Định hướng</h3>
+      <ul class="goal-list">
+        <li><span class="n">01</span><span>Nắm vững <b>nền tảng Khoa học máy tính</b> và rèn luyện tư duy giải quyết vấn đề một cách hệ thống.</span></li>
+        <li><span class="n">02</span><span>Đi sâu vào <b>AI &amp; Học máy</b>, đặc biệt là thị giác máy tính và ứng dụng trong y sinh.</span></li>
+        <li><span class="n">03</span><span>Học cách <b>sử dụng AI có trách nhiệm</b> — như một công cụ khuếch đại năng lực, không thay thế tư duy.</span></li>
+        <li><span class="n">04</span><span>Phát triển <b>kỹ năng nghiên cứu &amp; cộng tác</b> để sẵn sàng cho các dự án thực tế.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card reveal" style="margin-top:24px">
+    <h3><span class="ic">⚑</span>Mục tiêu của Portfolio này</h3>
+    <p>Portfolio Kỹ thuật số này được xây dựng trong khuôn khổ môn <b style="color:var(--ink)">Nhập môn Công nghệ số và Ứng dụng Trí tuệ nhân tạo</b>. Với tôi, nó không chỉ là một bài tập mà còn là nơi để:</p>
+    <ul class="goal-list" style="margin-top:6px">
+      <li><span class="n">→</span><span><b>Thể hiện các kỹ năng số đã học</b> qua sản phẩm cụ thể của từng chương, từ quản lý tệp tin đến sáng tạo nội dung bằng AI.</span></li>
+      <li><span class="n">→</span><span><b>Lưu trữ sản phẩm cá nhân</b> ở một nơi gọn gàng, dễ truy cập và dễ chia sẻ với giảng viên cũng như nhà tuyển dụng sau này.</span></li>
+      <li><span class="n">→</span><span><b>Nhìn lại quá trình trưởng thành</b> — không chỉ kết quả cuối cùng mà cả cách tư duy và quy trình thực hiện từng kỹ năng.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 02 DỰ ÁN -->
+<section class="projects" id="duan">
+  <div class="reveal seclabel">Trang 02 — Dự án</div>
+  <h2 class="sec reveal">Bộ sưu tập bài tập</h2>
+  <p class="sec-sub reveal">Sáu sản phẩm tương ứng với sáu chương của môn học, cùng một dự án nghiên cứu tiêu biểu. Mỗi mục trình bày mục tiêu, quy trình thực hiện và kết quả — kèm minh chứng thực tế.</p>
+
+  <!-- FEATURED -->
+  <div class="featured reveal">
+    <div class="feat-tag">★ Dự án tiêu biểu</div>
+    <div class="feat-in">
+      <div class="chap">Bonus · Tổng quan tài liệu khoa học với Elicit &amp; Consensus</div>
+      <h3>Ứng dụng Học sâu trong chẩn đoán ung thư phổi qua ảnh CT</h3>
+      <p class="lead">Sử dụng hai công cụ AI học thuật <b style="color:var(--ink)">Elicit</b> và <b style="color:var(--ink)">Consensus</b> để khảo sát, lọc và trích xuất thông tin từ các bài báo khoa học, từ đó xây dựng một bài tổng quan có hệ thống. Câu hỏi nghiên cứu: <em style="color:var(--soft)">các kiến trúc học sâu (CNN 2D/3D, transfer learning) đạt hiệu suất ra sao trong phát hiện ung thư phổi từ ảnh CT, và kiến trúc nào tốt nhất xét trên Accuracy, AUC và khả năng định vị khối u?</em></p>
+      <div class="feat-stats">
+        <div class="stat"><div class="v">05</div><div class="k">BÀI BÁO PHÂN TÍCH</div></div>
+        <div class="stat"><div class="v">98.5%</div><div class="k">ACCURACY CAO NHẤT</div></div>
+        <div class="stat"><div class="v">95.3%</div><div class="k">JACCARD (SEGMENT)</div></div>
+        <div class="stat"><div class="v">2019—25</div><div class="k">PHẠM VI NĂM</div></div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Bài báo</th><th>Kiến trúc</th><th>Dữ liệu</th><th>Kết quả chính</th></tr></thead>
+          <tbody>
+            <tr><td><b>LCDctCNN</b><br>Mamun &amp; cs. (2023)</td><td>CNN tự xây dựng vs Inception V3 / Xception / ResNet-50</td><td>CT scan công khai (Kaggle)</td><td>Accuracy 92%, AUC 98.21%, Recall 91.72%</td></tr>
+            <tr><td><b>Explainable AI</b><br>Rai &amp; cs. (2025)</td><td>CNN + DenseNet121 / ResNet152 / VGG19, tích hợp SHAP (XAI)</td><td>IQ-OTH/NCCD — 1.197 lát CT, 3 lớp</td><td>Hiệu suất cao + giải thích trực quan vùng quan tâm</td></tr>
+            <tr><td><b>Deep 3D CNN</b><br>Mishra &amp; cs. (2019)</td><td>3D CNN end-to-end, dự đoán cấp voxel</td><td>CT ngực 3D (lung nodule)</td><td>Định vị nốt nghi ngờ trong khối CT, không chỉ phân loại</td></tr>
+            <tr><td><b>3D Probabilistic</b><br>Ozdemir &amp; cs. (2019)</td><td>3D CNN xác suất, CAD đầu-cuối</td><td>LUNA16 (888 ca) + Kaggle DSB17 (~1.400 ca)</td><td>State-of-the-art trên cả hai bộ dữ liệu</td></tr>
+            <tr><td><b>Comparative Analysis</b><br>Mehmood &amp; cs. (2024)</td><td>6 CNN tiền huấn luyện + UNet/SegNet (segmentation)</td><td>CT có mặt nạ phân vùng khối u</td><td>InceptionResNetV2: 98.5% · UNet Jaccard 95.3%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="kv" style="margin-top:18px">
+        <li><b>Kết luận:</b> Transfer learning (InceptionResNetV2, DenseNet121) và 3D CNN cho tiềm năng lớn; để ứng dụng lâm sàng cần dữ liệu lớn hơn, khả năng giải thích (XAI) và kiểm chứng đa trung tâm.</li>
+      </ul>
+      <div class="foot">
+        <span class="tagpill">Elicit</span><span class="tagpill">Consensus</span><span class="tagpill">arXiv · MDPI</span>
+        <a class="report-link" href="reports/tuan7.pdf">↗ Xem báo cáo</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 PROJECTS -->
+  <div class="proj-grid">
+
+    <!-- P1 -->
+    <article class="proj reveal" style="--acc:var(--sky)">
+      <div class="accent"></div>
+      <div class="proj-body">
+        <div class="topline"><div class="num">01</div><div class="chap">Chương 1 · Máy tính &amp; thiết bị</div></div>
+        <h4>Thao tác cơ bản với tệp tin và thư mục</h4>
+        <p class="obj"><b>Mục tiêu:</b> Thành thạo các thao tác nền tảng quản lý dữ liệu trên hệ điều hành và thiết kế cấu trúc thư mục, quy tắc đặt tên hợp lý.</p>
+        <div class="shot"><img src="assets/p1_folders.jpg" alt="Cấu trúc thư mục thực hành" loading="lazy"></div>
+        <div class="caption">Minh chứng — cấu trúc thư mục &amp; menu thao tác trên File Explorer</div>
+        <ul class="kv">
+          <li>Tạo cây thư mục <b>ThucHanh</b> → thư mục con <b>TaiLieu</b> với quy tắc đặt tên nhất quán.</li>
+          <li>Thực hành đầy đủ: tạo, đổi tên, Copy/Cut–Paste, xóa, xóa vĩnh viễn &amp; khôi phục từ Recycle Bin.</li>
+          <li>Rút ra quy ước đặt tên tệp giúp tìm kiếm và quản lý hiệu quả.</li>
+        </ul>
+        <div class="foot"><span class="tagpill">File Explorer</span><span class="tagpill">Windows</span><a class="report-link" href="reports/tuan1.pdf">↗ Báo cáo</a></div>
+      </div>
+    </article>
+
+    <!-- P2 -->
+    <article class="proj reveal" style="--acc:var(--amber)">
+      <div class="accent"></div>
+      <div class="proj-body">
+        <div class="topline"><div class="num">02</div><div class="chap">Chương 2 · Khai thác dữ liệu</div></div>
+        <h4>Tìm kiếm &amp; đánh giá thông tin học thuật</h4>
+        <p class="obj"><b>Mục tiêu:</b> Xây dựng chiến lược tìm kiếm học thuật bằng toán tử nâng cao và đánh giá độ tin cậy của nguồn. Chủ đề: <b>Tác động của AI đến quy trình tuyển dụng nhân sự.</b></p>
+        <ul class="kv">
+          <li>Tìm kiếm song ngữ Việt–Anh trên <b>Google Scholar, VNU-LIC, ResearchGate</b> và báo cáo của McKinsey, PwC, Deloitte.</li>
+          <li>Thu thập <b>10 nguồn</b> chia 3 nhóm: bài báo khoa học, sách chuyên khảo, nguồn mở.</li>
+          <li>Lập bảng đánh giá theo tiêu chí uy tín tác giả, nhà xuất bản (Q1, Elsevier, Wharton Press), tính cập nhật &amp; giá trị nội dung.</li>
+        </ul>
+        <div class="foot"><span class="tagpill">Google Scholar</span><span class="tagpill">Đánh giá nguồn</span><a class="report-link" href="reports/tuan2.pdf">↗ Báo cáo</a></div>
+      </div>
+    </article>
+
+    <!-- P3 -->
+    <article class="proj reveal" style="--acc:var(--violet)">
+      <div class="accent"></div>
+      <div class="proj-body">
+        <div class="topline"><div class="num">03</div><div class="chap">Chương 3 · Trí tuệ nhân tạo</div></div>
+        <h4>Viết Prompt hiệu quả cho các tác vụ học tập</h4>
+        <p class="obj"><b>Mục tiêu:</b> So sánh prompt cơ bản — cải tiến — nâng cao trên ba tác vụ học tập và rút ra bộ nguyên tắc viết prompt của riêng mình.</p>
+        <div class="shot"><img src="assets/p3_prompt.jpg" alt="So sánh các phiên bản prompt" loading="lazy"></div>
+        <div class="caption">Minh chứng — ba cấp độ prompt cho tác vụ chuẩn hóa CSDL</div>
+        <ul class="kv">
+          <li>Thử nghiệm trên 3 tác vụ: tóm tắt bài báo (Transformer), giải thích khái niệm (chuẩn hóa DB), tạo bộ câu hỏi ôn tập.</li>
+          <li>Áp dụng kỹ thuật <b>Role + Chain-of-Thought + Constraints</b> để nâng độ chính xác và cấu trúc đầu ra.</li>
+          <li>Tổng hợp <b>quy tắc CREATE</b> (Context · Result · Example · Adjust · Task · Explain).</li>
+        </ul>
+        <div class="foot"><span class="tagpill">Prompt Engineering</span><span class="tagpill">CoT</span><a class="report-link" href="reports/tuan3.pdf">↗ Báo cáo</a></div>
+      </div>
+    </article>
+
+    <!-- P4 -->
+    <article class="proj reveal" style="--acc:var(--green)">
+      <div class="accent"></div>
+      <div class="proj-body">
+        <div class="topline"><div class="num">04</div><div class="chap">Chương 4 · Giao tiếp &amp; hợp tác</div></div>
+        <h4>Công cụ hợp tác trực tuyến cho dự án nhóm</h4>
+        <p class="obj"><b>Mục tiêu:</b> Phối hợp một dự án nhóm 5 thành viên hoàn toàn trực tuyến, với vai trò <b>thư ký &amp; phụ trách nội dung</b>.</p>
+        <div class="shot"><img src="assets/p4_trello.jpg" alt="Board Trello của nhóm" loading="lazy"></div>
+        <div class="caption">Minh chứng — board Trello quản lý công việc nhóm</div>
+        <ul class="kv">
+          <li>Sử dụng bộ 4 công cụ bổ trợ: <b>Trello</b> (quản lý), <b>Google Docs</b> (đồng soạn thảo, 43 lượt sửa), <b>Drive</b> (lưu trữ), <b>Discord</b> (giao tiếp).</li>
+          <li>Thiết kế cấu trúc thư mục đánh số &amp; quy ước đặt tên tệp cho cả nhóm.</li>
+          <li>Bài học: công cụ chỉ hữu ích khi có <b>quy ước rõ ràng</b>; minh bạch hóa công việc là cách tôn trọng đồng đội.</li>
+        </ul>
+        <div class="foot"><span class="tagpill">Trello</span><span class="tagpill">Google Workspace</span><a class="report-link" href="reports/tuan4.pdf">↗ Báo cáo</a></div>
+      </div>
+    </article>
+
+    <!-- P5 -->
+    <article class="proj reveal" style="--acc:var(--pink)">
+      <div class="accent"></div>
+      <div class="proj-body">
+        <div class="topline"><div class="num">05</div><div class="chap">Chương 5 · Sáng tạo nội dung số</div></div>
+        <h4>Dùng AI tạo sinh hỗ trợ sáng tạo nội dung</h4>
+        <p class="obj"><b>Mục tiêu:</b> Tạo một sản phẩm nội dung số (bài viết + infographic) với chủ đề <b>"AI và tương lai của lập trình viên"</b> bằng quy trình kết hợp nhiều công cụ AI.</p>
+        <div class="shot"><img src="assets/p5_gemini.jpg" alt="Hình minh họa do AI tạo sinh" loading="lazy"></div>
+        <div class="caption">Minh chứng — ảnh minh họa sinh bằng prompt mô tả chi tiết</div>
+        <ul class="kv">
+          <li>Quy trình 3 bước: <b>Gemini</b> (văn bản) → <b>tạo ảnh</b> (so sánh Midjourney/DALL·E) → <b>Canva AI</b> (đóng gói infographic).</li>
+          <li>Tự kiểm chứng &amp; bổ sung phần AI không làm được: ví dụ code lỗi thực tế, góc nhìn đạo đức nghề nghiệp.</li>
+          <li>Kết luận: AI như một "Junior Developer" chăm chỉ — hỗ trợ chứ không thay thế tư duy con người.</li>
+        </ul>
+        <div class="foot"><span class="tagpill">Gemini</span><span class="tagpill">Canva AI</span><a class="report-link" href="reports/tuan5.pdf">↗ Báo cáo</a></div>
+      </div>
+    </article>
+
+    <!-- P6 -->
+    <article class="proj reveal" style="--acc:var(--coral)">
+      <div class="accent"></div>
+      <div class="proj-body">
+        <div class="topline"><div class="num">06</div><div class="chap">Chương 6 · An toàn &amp; liêm chính</div></div>
+        <h4>Sử dụng AI có trách nhiệm trong học tập</h4>
+        <p class="obj"><b>Mục tiêu:</b> Phân tích chính sách sử dụng AI, mô tả quy trình dùng AI minh bạch và xây dựng bộ nguyên tắc cá nhân.</p>
+        <div class="shot"><img src="assets/p6_infographic.jpg" alt="Infographic nguyên tắc dùng AI có trách nhiệm" loading="lazy"></div>
+        <div class="caption">Minh chứng — infographic bộ nguyên tắc sử dụng AI có trách nhiệm</div>
+        <ul class="kv">
+          <li>So sánh chính sách ĐHQGHN với dự thảo Bộ GD&amp;ĐT và các trường quốc tế (MIT, Úc).</li>
+          <li>Quy trình 4 bước "tự nghĩ trước", khai báo minh bạch mức đóng góp của AI (~20%) và phát hiện <b>hiện tượng hallucination</b>.</li>
+          <li>Xây dựng <b>7 nguyên tắc cá nhân</b>: minh bạch, kiểm chứng, giữ vai trò chủ thể, đầu tư kỹ năng lõi…</li>
+        </ul>
+        <div class="foot"><span class="tagpill">Academic Integrity</span><span class="tagpill">XAI Ethics</span><a class="report-link" href="reports/tuan6.pdf">↗ Báo cáo</a></div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- 03 TỔNG KẾT -->
+<section class="summary" id="tongket">
+  <div class="reveal seclabel">Trang 03 — Tổng kết</div>
+  <h2 class="sec reveal">Nhìn lại hành trình</h2>
+  <p class="sec-sub reveal">Những kiến thức, kỹ năng và bài học mà tôi đúc kết được sau khi hoàn thành dự án Portfolio này.</p>
+
+  <div class="sum-grid">
+    <div class="sum-card reveal"><div class="ic">🧩</div><h4>Kỹ năng nền tảng</h4><p>Từ quản lý tệp tin, tìm kiếm học thuật đến đánh giá nguồn — những kỹ năng tưởng nhỏ nhưng là gốc rễ cho mọi công việc nghiên cứu sau này.</p></div>
+    <div class="sum-card reveal"><div class="ic">🤖</div><h4>Làm chủ AI</h4><p>Học cách viết prompt hiệu quả, dùng AI tạo sinh để sáng tạo nội dung, và quan trọng nhất là biết khi nào nên — không nên — tin vào kết quả của AI.</p></div>
+    <div class="sum-card reveal"><div class="ic">⚖️</div><h4>Tư duy &amp; đạo đức</h4><p>Hiểu ranh giới giữa hỗ trợ và gian lận, rèn thói quen kiểm chứng và giữ vai trò chủ thể trong tư duy thay vì phó mặc cho công cụ.</p></div>
+  </div>
+
+  <div class="reflect reveal">
+    <h3>Trải nghiệm cá nhân &amp; cảm nhận</h3>
+    <p>Khi bắt đầu, tôi nghĩ portfolio chỉ là việc gom các bài tập lại với nhau. Nhưng quá trình <strong>biên tập và trình bày lại</strong> từng sản phẩm đã buộc tôi nhìn lại chính quy trình tư duy của mình — điều gì hiệu quả, điều gì chỉ là làm cho xong. Sản phẩm cuối cùng chỉ là phần bề nổi; giá trị thật nằm ở việc tôi hiểu rõ <strong>tại sao</strong> mình làm như vậy.</p>
+    <p>Điều tâm đắc nhất là sợi chỉ đỏ xuyên suốt sáu chương: công nghệ số và AI là <strong>công cụ khuếch đại năng lực con người</strong>, không phải thứ thay thế nó. Từ việc tổ chức thư mục gọn gàng, đặt câu hỏi đúng cho AI, đến việc khai báo minh bạch khi dùng AI — tất cả đều quy về một thái độ: <strong>chủ động, cẩn trọng và trung thực.</strong></p>
+
+    <div class="takeaways">
+      <div class="ta"><div class="q">// Kiến thức quan trọng nhất</div><p>Tư duy phản biện và thói quen kiểm chứng không thể giao cho máy. Một prompt tốt, một nguồn đáng tin, một lời khai báo trung thực — đó mới là kỹ năng cốt lõi của thời đại AI.</p></div>
+      <div class="ta"><div class="q">// Thách thức lớn nhất</div><p>Phối hợp nhiều công cụ cùng lúc dễ gây "loãng chú ý", và việc giữ tính nhất quán khi trình bày lại nhiều sản phẩm khác nhau đòi hỏi sự kiên nhẫn. Tôi giải quyết bằng quy ước rõ ràng và phương pháp Pomodoro.</p></div>
+      <div class="ta"><div class="q">// Điều khiến tôi tự hào</div><p>Dự án tổng quan tài liệu về học sâu trong chẩn đoán ung thư phổi — nơi tôi thấy rõ Khoa học máy tính có thể tạo ra tác động thật sự đến đời sống con người.</p></div>
+      <div class="ta"><div class="q">// Hướng đi tiếp theo</div><p>Tôi muốn đi sâu hơn vào Học máy và Thị giác máy tính, đồng thời tiếp tục xây dựng portfolio này thành một hồ sơ năng lực thật sự cho con đường phía trước.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-in">
+    <div class="reveal">
+      <h3>Cảm ơn bạn đã ghé thăm.</h3>
+      <p>Portfolio Kỹ thuật số được thực hiện cho môn <em>Nhập môn Công nghệ số và Ứng dụng Trí tuệ nhân tạo</em> — Trường Đại học Công nghệ, ĐHQGHN.</p>
+      <div class="hero-cta" style="opacity:1;animation:none;margin-top:24px">
+        <a href="#top" class="btn ghost">↑ Về đầu trang</a>
+      </div>
+    </div>
+    <div class="submit-box reveal">
+      <div class="lbl">Hình thức nộp bài</div>
+      <ul>
+        <li>▹ <span>Đường dẫn (URL) đến website Portfolio này.</span></li>
+        <li>▹ <span>File báo cáo từng bài tập dạng PDF, đặt trong thư mục <code>reports/</code> cạnh trang web.</span></li>
+        <li>▹ <span>Có thể xuất chính trang này thành PDF để lưu trữ hồ sơ (Ctrl + P → Save as PDF).</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Đào Nhật Anh — K70I-CS6 · MSSV 25021613</span>
+    <span>Trường Đại học Công nghệ — ĐHQGHN</span>
+  </div>
+</footer>
+
+<script>
+// nav scrolled state
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>20));
+
+// mobile menu
+const mb=document.getElementById('menuBtn'),nl=document.getElementById('navlinks');
+mb.addEventListener('click',()=>nl.classList.toggle('open'));
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nl.classList.remove('open')));
+
+// active section in nav
+const secs=['gioithieu','duan','tongket'].map(id=>document.getElementById(id));
+const links=document.querySelectorAll('.navlinks a');
+const navObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){
+    links.forEach(l=>l.classList.toggle('active',l.dataset.sec===e.target.id));
+  }});
+},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>navObs.observe(s));
+
+// reveal on scroll
+const rObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rObs.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*60)+'ms';rObs.observe(el);});
+</script>
+</body>
+</html>
